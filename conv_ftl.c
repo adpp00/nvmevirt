@@ -407,7 +407,7 @@ void conv_init_namespace(struct nvmev_ns *ns, uint32_t id, uint64_t size, void *
 	ns->csi = NVME_CSI_NVM;
 	ns->nr_parts = nr_parts;
 	ns->ftls = (void *)conv_ftls;
-	ns->size = (uint64_t)((size * 100) / cpp.pba_pcent);
+	ns->size = CONV_LOGICAL_CAP; // ns-> (uint64_t)((size * 100) / cpp.pba_pcent);
 	ns->mapped = mapped_addr;
 	/*register io command handler*/
 	ns->proc_io_cmd = conv_proc_nvme_io_cmd;
@@ -1003,7 +1003,7 @@ static bool conv_write(struct nvmev_ns *ns, struct nvmev_request *req, struct nv
 			nsecs_completed = ssd_advance_nand(conv_ftl->ssd, &swr);
 			nsecs_latest = max(nsecs_completed, nsecs_latest);
 
-			schedule_internal_operation(req->sq_id, nsecs_completed, wbuf,
+			schedule_internal_operation(req->sq_id, req->ns_id, nsecs_completed, wbuf,
 						    spp->pgs_per_oneshotpg * spp->pgsz);
 		}
 

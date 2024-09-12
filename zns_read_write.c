@@ -206,7 +206,7 @@ static bool __zns_write(struct zns_ftl *zns_ftl, struct nvmev_request *req,
 			else
 				bufs_to_release = spp->pgs_per_oneshotpg * spp->pgsz;
 
-			schedule_internal_operation(req->sq_id, nsecs_completed, write_buffer,
+			schedule_internal_operation(req->sq_id, req->ns_id, nsecs_completed, write_buffer,
 						    bufs_to_release);
 		}
 	}
@@ -358,7 +358,7 @@ static bool __zns_write_zrwa(struct zns_ftl *zns_ftl, struct nvmev_request *req,
 			nsecs_completed = ssd_advance_nand(zns_ftl->ssd, &swr);
 			nsecs_latest = max(nsecs_completed, nsecs_latest);
 
-			schedule_internal_operation(req->sq_id, nsecs_completed,
+			schedule_internal_operation(req->sq_id, req->ns_id, nsecs_completed,
 						    &zns_ftl->zrwa_buffer[zid],
 						    spp->pgs_per_oneshotpg * spp->pgsz);
 		}

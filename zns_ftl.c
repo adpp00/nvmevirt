@@ -120,7 +120,7 @@ static void zns_init_ftl(struct zns_ftl *zns_ftl, struct znsparams *zpp, struct 
 	__init_resource(zns_ftl);
 }
 
-void zns_init_namespace(struct nvmev_ns *ns, uint32_t id, uint64_t size, void *mapped_addr,
+void zns_init_namespace(struct nvmev_ns *ns, uint32_t id, uint64_t size_new, void *mapped_addr,
 			uint32_t cpu_nr_dispatcher)
 {
 	struct ssd *ssd;
@@ -128,6 +128,8 @@ void zns_init_namespace(struct nvmev_ns *ns, uint32_t id, uint64_t size, void *m
 
 	struct ssdparams spp;
 	struct znsparams zpp;
+
+	uint64_t size = size_new - size_new % ZONE_SIZE;
 
 	const uint32_t nr_parts = 1; /* Not support multi partitions for zns*/
 	NVMEV_ASSERT(nr_parts == 1);

@@ -299,6 +299,7 @@ static void __enqueue_io_req(int sqid, int cqid, int sq_entry, unsigned long lon
 	/////////////////////////////////
 	w->sqid = sqid;
 	w->cqid = cqid;
+	w->nsid = sq_entry(sq_entry).common.nsid;
 	w->sq_entry = sq_entry;
 	w->command_id = sq_entry(sq_entry).common.command_id;
 	w->nsecs_start = nsecs_start;
@@ -316,7 +317,7 @@ static void __enqueue_io_req(int sqid, int cqid, int sq_entry, unsigned long lon
 	__insert_req_sorted(entry, worker, ret->nsecs_target);
 }
 
-void schedule_internal_operation(int sqid, unsigned long long nsecs_target,
+void schedule_internal_operation(int sqid, int nsid, unsigned long long nsecs_target,
 				 struct buffer *write_buffer, size_t buffs_to_release)
 {
 	struct nvmev_io_worker *worker;
@@ -334,6 +335,7 @@ void schedule_internal_operation(int sqid, unsigned long long nsecs_target,
 
 	/////////////////////////////////
 	w->sqid = sqid;
+	w->nsid = nsid;
 	w->nsecs_start = w->nsecs_enqueue = local_clock();
 	w->nsecs_target = nsecs_target;
 	w->is_completed = false;
@@ -415,6 +417,7 @@ static size_t __nvmev_proc_io(int sqid, int sq_entry, size_t *io_size)
 	struct nvmev_request req = {
 		.cmd = cmd,
 		.sq_id = sqid,
+		.ns_id = nsid,		
 		.nsecs_start = nsecs_start,
 	};
 	struct nvmev_result ret = {

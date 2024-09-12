@@ -170,6 +170,7 @@ struct nvmev_config {
 struct nvmev_io_work {
 	int sqid;
 	int cqid;
+	int nsid;
 
 	int sq_entry;
 	unsigned int command_id;
@@ -264,6 +265,7 @@ struct nvmev_dev {
 struct nvmev_request {
 	struct nvme_command *cmd;
 	uint32_t sq_id;
+	uint32_t ns_id;
 	uint64_t nsecs_start;
 };
 
@@ -309,7 +311,7 @@ void nvmev_proc_admin_cq(int new_db, int old_db);
 
 // OPS I/O QUEUE
 struct buffer;
-void schedule_internal_operation(int sqid, unsigned long long nsecs_target,
+void schedule_internal_operation(int sqid, int nsid, unsigned long long nsecs_target,
 				struct buffer *write_buffer, size_t buffs_to_release);
 void NVMEV_IO_WORKER_INIT(struct nvmev_dev *nvmev_vdev);
 void NVMEV_IO_WORKER_FINAL(struct nvmev_dev *nvmev_vdev);

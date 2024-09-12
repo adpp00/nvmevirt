@@ -176,11 +176,11 @@ static_assert((ZONE_SIZE % DIES_PER_ZONE) == 0);
 #define LBA_SIZE (1 << LBA_BITS)
 
 #elif (BASE_SSD == WD_ZN540)
-#define NR_NAMESPACES 1
+#define NR_NAMESPACES 2
 
-#define NS_SSD_TYPE_0 SSD_TYPE_ZNS
-#define NS_CAPACITY_0 (0)
-#define NS_SSD_TYPE_1 NS_SSD_TYPE_0
+#define NS_SSD_TYPE_0 SSD_TYPE_CONV
+#define NS_CAPACITY_0 MB(2432ULL)
+#define NS_SSD_TYPE_1 SSD_TYPE_ZNS
 #define NS_CAPACITY_1 (0)
 #define MDTS (6)
 #define CELL_MODE (CELL_MODE_TLC)
@@ -196,7 +196,7 @@ static_assert((ZONE_SIZE % DIES_PER_ZONE) == 0);
 /*In an emulator environment, it may be too large to run an application
   which requires a certain number of zones or more.
   So, adjust the zone size to fit your environment */
-#define ZONE_SIZE GB(2ULL)
+#define ZONE_SIZE MB(1024ULL)
 
 static_assert((ONESHOT_PAGE_SIZE % FLASH_PAGE_SIZE) == 0);
 
@@ -220,7 +220,8 @@ static_assert((ONESHOT_PAGE_SIZE % FLASH_PAGE_SIZE) == 0);
 #define FW_WBUF_LATENCY0 (5600)
 #define FW_WBUF_LATENCY1 (600)
 #define FW_CH_XFER_LATENCY (0)
-#define OP_AREA_PERCENT (0)
+#define CONV_LOGICAL_CAP GB(2ULL)
+#define OP_AREA_PERCENT (1)
 
 #define ZONE_WB_SIZE (10 * ONESHOT_PAGE_SIZE)
 #define GLOBAL_WB_SIZE (0)
@@ -228,7 +229,8 @@ static_assert((ONESHOT_PAGE_SIZE % FLASH_PAGE_SIZE) == 0);
 
 /* Don't modify followings. BLK_SIZE is caculated from ZONE_SIZE and DIES_PER_ZONE */
 #define BLKS_PER_PLN 0 /* BLK_SIZE should not be 0 */
-#define BLK_SIZE (ZONE_SIZE / DIES_PER_ZONE)
+#define SUPERBLK_SIZE MB(128ULL)
+#define BLK_SIZE (SUPERBLK_SIZE / DIES_PER_ZONE)
 static_assert((ZONE_SIZE % DIES_PER_ZONE) == 0);
 
 /* For ZRWA */
